@@ -1,36 +1,87 @@
-BCIS Subscription Billing and Collection System
-This repository contains the BCIS laboratory project for a three-office desktop billing workflow. The solution includes an Electron desktop shell, a Fastify API, a PostgreSQL-backed Drizzle data layer, and a React renderer for the office client experience.
+# ST-LabAct4
 
-Project structure
-source/ – monorepo application source for the API, desktop client, and shared libraries.
-database/migrations/ – Drizzle SQL migrations.
-database/seeds/ – synthetic demo data seeding scripts.
-docs/ – technical and user documentation.
-tests/ – acceptance evidence and screenshots.
-reports-samples/ – sample export artifacts.
-release/ – packaging and release notes.
-Quick start
-Open a terminal in the source/ directory.
-Install dependencies:
+This workspace contains the BCIS laboratory project and supporting materials for the Subscription Billing and Collection System.
+
+## Overview
+
+The main project, [BCIS-Subscription-Billing-System](BCIS-Subscription-Billing-System), is a three-office LAN-based billing and collection system for Bukidnon Cable and Internet Services (BCIS). It implements a desktop workflow built with Electron, React, Fastify, PostgreSQL, and Drizzle.
+
+## Included in this workspace
+
+- [BCIS-Subscription-Billing-System](BCIS-Subscription-Billing-System) — main application source, database, docs, and validation assets
+- [lab_activity_extracted.txt](lab_activity_extracted.txt) — extracted activity notes
+- [BCIS_Subscription_Billing_and_Collection_Laboratory_Activity.pdf](BCIS_Subscription_Billing_and_Collection_Laboratory_Activity.pdf) — original lab PDF
+
+## Main project features
+
+- Internet, Cable, and Combo subscription handling
+- Monthly billing and invoice generation
+- Subscriber ledger and statement tracking
+- Cash and GCash payment processing
+- Collection area, collector, and remittance workflows
+- Overdue receivables and service suspension/reconnection tracking
+- Role-based access control and auditing
+- Backup, restore, and integrity checks
+- PDF, XLSX, and CSV reporting
+
+## Project structure
+
+```text
+ST-LabAct4/
+├── README.md
+├── lab_activity_extracted.txt
+├── BCIS_Subscription_Billing_and_Collection_Laboratory_Activity.pdf
+├── BCIS-Subscription-Billing-System/
+│   ├── README.md
+│   ├── CLAUDE.md
+│   ├── LAB4-COMPLIANCE-CHECKLIST.md
+│   ├── source/
+│   ├── database/
+│   ├── docs/
+│   ├── tests/
+│   ├── reports-samples/
+│   └── release/
+└── ...
+```
+
+## Quick start
+
+To run the actual system:
+
+```bash
+cd BCIS-Subscription-Billing-System/source
 npm install
-Start the API:
-npm run dev:api
-Start the renderer:
-npm run dev:renderer
-Launch Electron:
-npm run dev:electron
-Validation
-Run the project verification suite:
-
-npm test
-npm run typecheck
-The API includes database-backed billing, payments, ledger posting, and authorization checks with a PostgreSQL runtime.
-
-Demo data
-Synthetic seed data can be generated with:
-
+npm run db:reset
 npm run seed:demo
-This runs the demo seed script under database/seeds/seed-demo.ts.
+npm run dev
+```
 
-Notes
-This repository is organized for compliance with the lab requirements and acts as the source for the submission package.
+Or run the services separately:
+
+```bash
+npm run dev:api
+npm run dev:renderer
+npm run dev:electron
+```
+
+## Validation
+
+```bash
+npm test
+npm run test:integration
+npm run verify
+```
+
+## Documentation
+
+See the main project documentation in:
+
+- [BCIS-Subscription-Billing-System/README.md](BCIS-Subscription-Billing-System/README.md)
+- [BCIS-Subscription-Billing-System/docs/technical-documentation.md](BCIS-Subscription-Billing-System/docs/technical-documentation.md)
+- [BCIS-Subscription-Billing-System/docs/user-manual.md](BCIS-Subscription-Billing-System/docs/user-manual.md)
+- [BCIS-Subscription-Billing-System/docs/api-spec.md](BCIS-Subscription-Billing-System/docs/api-spec.md)
+- [BCIS-Subscription-Billing-System/LAB4-COMPLIANCE-CHECKLIST.md](BCIS-Subscription-Billing-System/LAB4-COMPLIANCE-CHECKLIST.md)
+
+## Notes
+
+This workspace is organized as a lab submission package and includes both the implementation and supporting documentation for the BCIS billing and collection system.
