@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Runtime data: attachments, backups, logs
+var/
+*.log
+npm-debug.log*
+
+# Generated installer output (artifacts are committed to release/ deliberately)
+source/apps/desktop/renderer/dist/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

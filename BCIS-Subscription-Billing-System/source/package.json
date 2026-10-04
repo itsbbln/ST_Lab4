@@ -1,0 +1,39 @@
+{
+  "name": "bcis-subscription-billing-system",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/api",
+    "apps/desktop/renderer",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev -w @bcis/api",
+    "dev:renderer": "npm run dev -w @bcis/desktop-renderer",
+    "dev:electron": "wait-on http://127.0.0.1:4173 http://127.0.0.1:3001/health && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:4173 electron apps/desktop/main.js",
+    "dev": "node scripts/run-dev.mjs",
+    "build": "npm run build -w @bcis/shared && npm run build -w @bcis/api && npm run build -w @bcis/desktop-renderer",
+    "acceptance:pdf": "tsx scripts/generate-acceptance-report.ts",
+    "test": "npm run test -w @bcis/api",
+    "test:integration": "npm run test:integration -w @bcis/api",
+    "test:all": "npm run test && npm run test:integration",
+    "verify": "npm run typecheck && npm run test:all && npm run lint",
+    "lint": "npm run lint -w @bcis/api && npm run lint -w @bcis/desktop-renderer",
+    "typecheck": "npm run typecheck -w @bcis/shared && npm run typecheck -w @bcis/api && npm run typecheck -w @bcis/desktop-renderer && npm run typecheck:scripts",
+    "typecheck:scripts": "tsc -p scripts/tsconfig.json",
+    "seed:demo": "tsx scripts/seed-demo.ts",
+    "db:reset": "tsx scripts/db-reset.ts",
+    "smoke": "tsx scripts/smoke-test.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/pdfmake": "^0.3.3",
+    "@types/pg": "^8.23.1",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
+    "drizzle-kit": "^0.31.11",
+    "electron": "^37.4.0",
+    "electron-builder": "^26.15.3",
+    "wait-on": "^8.0.5"
+  }
+}

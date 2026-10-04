@@ -1,0 +1,271 @@
+/*
+ * BCIS design tokens and base styles.
+ *
+ * The laboratory specification requires a consistent visual language, a calm
+ * light surface for long working sessions, right-aligned tabular figures for
+ * every peso value, and status shown as text plus colour so it is never
+ * communicated by colour alone.
+ */
+
+:root {
+  /* Neutrals */
+  --surface: #ffffff;
+  --surface-sunken: #f4f6fb;
+  --surface-raised: #ffffff;
+  --sidebar: #16233a;
+  --sidebar-hover: #1f3050;
+  --sidebar-active: #27405f;
+
+  /* Text */
+  --text: #1b2434;
+  --text-muted: #5b6779;
+  --text-subtle: #8792a4;
+  --text-inverse: #f2f5fa;
+
+  /* Lines */
+  --border: #dfe4ec;
+  --border-strong: #c6cedb;
+
+  /* Brand */
+  --brand: #1d4ed8;
+  --brand-hover: #1e40af;
+  --brand-soft: #eef3ff;
+  --brand-border: #c7d6ff;
+
+  /* Status: each tone pairs a text colour, a background and a border. */
+  --tone-neutral-text: #4b5563;
+  --tone-neutral-bg: #f1f3f7;
+  --tone-neutral-border: #dfe3ea;
+
+  --tone-info-text: #1d4ed8;
+  --tone-info-bg: #eef3ff;
+  --tone-info-border: #c7d6ff;
+
+  --tone-success-text: #12683f;
+  --tone-success-bg: #e8f6ef;
+  --tone-success-border: #b9e3ce;
+
+  --tone-warning-text: #8a5300;
+  --tone-warning-bg: #fdf3e2;
+  --tone-warning-border: #f0d9ab;
+
+  --tone-danger-text: #a32020;
+  --tone-danger-bg: #fdecec;
+  --tone-danger-border: #f3c2c2;
+
+  --tone-accent-text: #5b21b6;
+  --tone-accent-bg: #f3edff;
+  --tone-accent-border: #ddccff;
+
+  /* Typography */
+  --font-sans: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Cascadia Mono', Consolas, 'Courier New', monospace;
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 17px;
+  --text-xl: 21px;
+  --text-2xl: 26px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  --shadow-sm: 0 1px 2px rgba(23, 32, 48, 0.06);
+  --shadow: 0 2px 8px rgba(23, 32, 48, 0.08);
+  --shadow-lg: 0 12px 32px rgba(23, 32, 48, 0.16);
+
+  --sidebar-width: 236px;
+  --topbar-height: 58px;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--surface-sunken);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text);
+}
+
+h1 {
+  font-size: var(--text-xl);
+}
+h2 {
+  font-size: var(--text-lg);
+}
+h3 {
+  font-size: var(--text-md);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/*
+ * Every peso value is right-aligned and uses tabular figures so a column of
+ * amounts can be scanned vertically without the digits shifting.
+ */
+.tabular,
+.money {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+/* Visible focus for keyboard users on every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--brand-soft);
+}
+
+/* Scrollbars that do not fight the light surface. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * Print layout
+ *
+ * A route sheet, statement of account or remittance sheet has to be usable on
+ * its own. When the print hook runs it adds `printing` to <body>, which hides
+ * the application chrome and promotes the printable region to the page.
+ * ---------------------------------------------------------------------------
+ */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 12mm;
+  }
+
+  body {
+    background: #fff;
+    font-size: 10.5pt;
+    color: #000;
+  }
+
+  .app-sidebar,
+  .app-topbar,
+  .page-actions,
+  .no-print,
+  .toast-stack {
+    display: none !important;
+  }
+
+  .app-shell {
+    display: block !important;
+  }
+
+  .app-main {
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .printable {
+    position: static !important;
+    display: block !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #fff !important;
+  }
+
+  .printable__header {
+    display: block !important;
+    margin-bottom: 10mm;
+    padding-bottom: 4mm;
+    border-bottom: 1.5pt solid #000;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  .panel {
+    box-shadow: none !important;
+    border: 0.5pt solid #999 !important;
+    page-break-inside: avoid;
+  }
+
+  /* Never rely on colour alone once the page is on paper. */
+  .badge {
+    border: 0.5pt solid #000 !important;
+    background: transparent !important;
+    color: #000 !important;
+  }
+
+  a[href]::after {
+    content: '';
+  }
+}
+
+/* Hidden on screen, revealed on paper. */
+.printable__header {
+  display: none;
+}

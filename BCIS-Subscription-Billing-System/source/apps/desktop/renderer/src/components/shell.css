@@ -1,0 +1,310 @@
+/* Application shell: sidebar, top bar and content area. */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  height: 100%;
+  transition: grid-template-columns 0.15s ease;
+}
+
+.app-shell--collapsed {
+  grid-template-columns: 56px minmax(0, 1fr);
+}
+
+/* -------------------------------------------------------------- sidebar */
+
+.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  background: var(--sidebar);
+  color: var(--text-inverse);
+  overflow: hidden;
+}
+
+.sidebar__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: var(--topbar-height);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  justify-content: center;
+}
+
+.sidebar__mark {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.sidebar__tagline {
+  font-size: var(--text-xs);
+  color: rgba(242, 245, 250, 0.62);
+}
+
+.sidebar__nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3) var(--space-2);
+}
+
+.sidebar__group + .sidebar__group {
+  margin-top: var(--space-4);
+}
+
+.sidebar__group-label {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(242, 245, 250, 0.45);
+}
+
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 7px var(--space-3);
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: rgba(242, 245, 250, 0.86);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar__item:hover {
+  background: var(--sidebar-hover);
+  color: #fff;
+}
+
+.sidebar__item--active {
+  background: var(--sidebar-active);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 #7aa2ff;
+}
+
+.sidebar__icon {
+  width: 18px;
+  flex: 0 0 18px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.sidebar__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.sidebar__server {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sidebar__server-label {
+  font-size: var(--text-xs);
+  color: rgba(242, 245, 250, 0.55);
+}
+
+.sidebar__server-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar__collapse {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: rgba(242, 245, 250, 0.8);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.sidebar__collapse:hover {
+  background: var(--sidebar-hover);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: #4ade80;
+}
+
+.dot--danger {
+  background: #f87171;
+}
+
+/* --------------------------------------------------------------- topbar */
+
+.app-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+}
+
+.app-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--topbar-height);
+  flex: 0 0 var(--topbar-height);
+  padding: 0 var(--space-5);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.topbar__left,
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--border);
+}
+
+.user-chip__meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  text-align: right;
+}
+
+.user-chip__meta span {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+/* ----------------------------------------------------------------- main */
+
+.app-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-5);
+}
+
+.printable {
+  min-height: 100%;
+}
+
+/* While printing, the printable region is the whole page. */
+body.printing .app-sidebar,
+body.printing .app-topbar,
+body.printing .page-actions {
+  display: none !important;
+}
+
+body.printing .app-shell {
+  display: block !important;
+}
+
+body.printing .app-main {
+  overflow: visible !important;
+  padding: 0 !important;
+}
+
+body.printing .printable {
+  padding: 0 !important;
+}
+
+/* ------------------------------------------------------------ login view */
+
+.login-shell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: var(--space-6);
+  background: linear-gradient(150deg, #16233a 0%, #22345a 55%, #2f4a7a 100%);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.login-card__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.login-card__mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: var(--brand);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.login-card h1 {
+  font-size: var(--text-md);
+}
+
+.login-card p {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.login-card .btn--primary {
+  width: 100%;
+  padding: 9px;
+}
+
+.login-card__server {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  text-align: center;
+}
+
+/* -------------------------------------------------------- boot / loading */
+
+.boot-shell {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--text-muted);
+}

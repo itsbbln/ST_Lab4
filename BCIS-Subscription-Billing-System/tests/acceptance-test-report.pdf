@@ -1,0 +1,247 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Length 207 >>
+stream
+BT
+/2 12 Tf
+36.0 555.0 Td
+(BCIS Acceptance Test Report) Tj
+/1 8 Tf
+276.0 555.0 Td
+(Generated from tests/acceptance-test-report.md) Tj
+/2 8 Tf
+36.0 513.0 Td
+(Section) Tj
+/2 8 Tf
+84.0 513.0 Td
+(Evidence) Tj
+ET
+endstream
+endobj
+4 0 obj
+<< /Length 2159 >>
+stream
+BT
+/1 8 Tf
+36.0 500.0 Td
+(Overview) Tj
+/1 8 Tf
+84.0 500.0 Td
+(This file &) Tj
+/1 8 Tf
+36.0 487.0 Td
+(Verificat&) Tj
+/1 8 Tf
+84.0 487.0 Td
+(Prepared f&) Tj
+/1 8 Tf
+36.0 474.0 Td
+(Verificat&) Tj
+/1 8 Tf
+84.0 474.0 Td
+(The PDF de&) Tj
+/1 8 Tf
+36.0 461.0 Td
+(Verificat&) Tj
+/1 8 Tf
+84.0 461.0 Td
+(Core verif&) Tj
+/1 8 Tf
+36.0 448.0 Td
+(Verificat&) Tj
+/1 8 Tf
+84.0 448.0 Td
+(Last updat&) Tj
+/1 8 Tf
+36.0 435.0 Td
+(Automated&) Tj
+/1 8 Tf
+84.0 435.0 Td
+(`npm test`&) Tj
+/1 8 Tf
+36.0 422.0 Td
+(Automated&) Tj
+/1 8 Tf
+84.0 422.0 Td
+(`npm run t&) Tj
+/1 8 Tf
+36.0 409.0 Td
+(Automated&) Tj
+/1 8 Tf
+84.0 409.0 Td
+(`npm run s&) Tj
+/1 8 Tf
+36.0 396.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 396.0 Td
+(ID | Scena&) Tj
+/1 8 Tf
+36.0 383.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 383.0 Td
+(AT-01 | Ex&) Tj
+/1 8 Tf
+36.0 370.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 370.0 Td
+(AT-02 | Pa&) Tj
+/1 8 Tf
+36.0 357.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 357.0 Td
+(AT-03 | Ad&) Tj
+/1 8 Tf
+36.0 344.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 344.0 Td
+(AT-04 | Ol&) Tj
+/1 8 Tf
+36.0 331.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 331.0 Td
+(AT-05 | Du&) Tj
+/1 8 Tf
+36.0 318.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 318.0 Td
+(AT-06 | Pa&) Tj
+/1 8 Tf
+36.0 305.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 305.0 Td
+(AT-07 | Co&) Tj
+/1 8 Tf
+36.0 292.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 292.0 Td
+(AT-08 | Co&) Tj
+/1 8 Tf
+36.0 279.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 279.0 Td
+(AT-09 | Co&) Tj
+/1 8 Tf
+36.0 266.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 266.0 Td
+(AT-10 | Ca&) Tj
+/1 8 Tf
+36.0 253.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 253.0 Td
+(AT-11 | Du&) Tj
+/1 8 Tf
+36.0 240.0 Td
+(Mandatory&) Tj
+/1 8 Tf
+84.0 240.0 Td
+(AT-12 | Ba&) Tj
+/1 8 Tf
+36.0 227.0 Td
+(Desktop A&) Tj
+/1 8 Tf
+84.0 227.0 Td
+(`npm run s&) Tj
+/1 8 Tf
+36.0 214.0 Td
+(Desktop A&) Tj
+/1 8 Tf
+84.0 214.0 Td
+(The deskto&) Tj
+/1 8 Tf
+36.0 201.0 Td
+(Desktop A&) Tj
+/1 8 Tf
+84.0 201.0 Td
+(Additional&) Tj
+/1 8 Tf
+36.0 188.0 Td
+(Defect An&) Tj
+/1 8 Tf
+84.0 188.0 Td
+(The projec&) Tj
+/1 8 Tf
+36.0 175.0 Td
+(Defect An&) Tj
+/1 8 Tf
+84.0 175.0 Td
+(Recent reg&) Tj
+/1 8 Tf
+36.0 162.0 Td
+(Remaining&) Tj
+/1 8 Tf
+84.0 162.0 Td
+(AT-09 stil&) Tj
+/1 8 Tf
+36.0 149.0 Td
+(Remaining&) Tj
+/1 8 Tf
+84.0 149.0 Td
+(The final &) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Length 76 >>
+stream
+BT
+/2 8 Tf
+36.0 513.0 Td
+(Section) Tj
+/2 8 Tf
+84.0 513.0 Td
+(Evidence) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 3 0 R >>
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 4 0 R >>
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 5 0 R >>
+endobj
+9 0 obj
+<< /Type /Pages /Kids [6 0 R 7 0 R 8 0 R] /Count 3 >>
+endobj
+10 0 obj
+<< /Type /Catalog /Pages 9 0 R >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000000154 00000 n 
+0000000412 00000 n 
+0000002623 00000 n 
+0000002749 00000 n 
+0000002885 00000 n 
+0000003021 00000 n 
+0000003157 00000 n 
+0000003226 00000 n 
+trailer
+<< /Size 11 /Root 10 0 R >>
+startxref
+3276
+%%EOF
