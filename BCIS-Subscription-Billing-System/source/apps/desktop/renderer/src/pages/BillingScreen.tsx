@@ -11,6 +11,7 @@ import { useState } from 'react'
 
 import { displayMoney } from '../lib/api'
 import { confirmAction, describeError } from '../lib/desktop'
+import { ReportExportMenu } from '../components/export'
 import { formatDateTime, formatNumber, formatPeriod, humanizeToken } from '../lib/format'
 import { useApiMutation, useApiQuery } from '../lib/query'
 import { useAuth } from '../lib/auth'
@@ -81,11 +82,14 @@ export function BillingScreen(): React.JSX.Element {
         title="Billing"
         subtitle="Monthly cycles, and what each one raised"
         actions={
-          can('billing.generate') ? (
-            <button type="button" className="btn btn--primary" onClick={() => setShowGenerate(true)}>
-              Generate invoices
-            </button>
-          ) : null
+          <>
+            <ReportExportMenu path="/reports/billing-vs-collection" suggestedName="bcis-billing-vs-collection" />
+            {can('billing.generate') ? (
+              <button type="button" className="btn btn--primary" onClick={() => setShowGenerate(true)}>
+                Generate invoices
+              </button>
+            ) : null}
+          </>
         }
       />
 

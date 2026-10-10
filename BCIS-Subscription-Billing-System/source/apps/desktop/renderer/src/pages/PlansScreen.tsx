@@ -11,6 +11,7 @@ import { useState } from 'react'
 
 import { centavosToPesosInput, displayMoney, pesosToCentavos } from '../lib/api'
 import { describeError, printCurrent } from '../lib/desktop'
+import { ViewExportMenu } from '../components/export'
 import { formatNumber, humanizeToken } from '../lib/format'
 import { useApiMutation, useApiQuery } from '../lib/query'
 import { useAuth } from '../lib/auth'
@@ -137,9 +138,12 @@ export function PlansScreen(): React.JSX.Element {
         title="Service plans"
         subtitle="The price book every invoice is generated from"
         actions={
-          <button type="button" className="btn" onClick={() => void printCurrent('page')}>
-            Print price list
-          </button>
+          <>
+            <ViewExportMenu suggestedName="bcis-service-plans.pdf" />
+            <button type="button" className="btn" onClick={() => void printCurrent('page')}>
+              Print price list
+            </button>
+          </>
         }
       />
 

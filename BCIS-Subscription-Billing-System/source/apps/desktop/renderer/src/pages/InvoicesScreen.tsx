@@ -10,6 +10,7 @@ import { useState } from 'react'
 
 import { displayMoney } from '../lib/api'
 import { describeError, printCurrent } from '../lib/desktop'
+import { ViewExportMenu } from '../components/export'
 import { formatDate, formatNumber, humanizeToken } from '../lib/format'
 import { useApiQuery, usePagedList } from '../lib/query'
 import { useAuth } from '../lib/auth'
@@ -243,6 +244,7 @@ function InvoiceStatement({ invoiceId, onBack }: { invoiceId: string; onBack: ()
             <button type="button" className="btn" onClick={onBack}>
               Back to register
             </button>
+            <ViewExportMenu suggestedName={`bcis-invoice-${data.invoiceNumber}.pdf`} />
             <button type="button" className="btn" onClick={() => void printCurrent('page')}>
               Print
             </button>

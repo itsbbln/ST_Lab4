@@ -211,6 +211,10 @@ export class ApiClient {
   /**
    * Fetch a report export as raw bytes so the file can be handed to the native
    * save dialog rather than silently dropping it in a downloads folder.
+   *
+   * The API selects the export mode with the `exportFormat` query value; sending
+   * `format` instead would be ignored by the route's Zod schema and the server
+   * would answer with JSON that this method would happily save as a `.pdf`.
    */
   async download(
     path: string,
@@ -218,7 +222,7 @@ export class ApiClient {
     format: 'csv' | 'xlsx' | 'pdf'
   ): Promise<{ blob: Blob; filename: string }> {
     const token = this.options.token()
-    const response = await fetch(this.url(path, { ...query, format }), {
+    const response = await fetch(this.url(path, { ...query, exportFormat: format }), {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     })
 
@@ -233,6 +237,12 @@ export class ApiClient {
     const disposition = response.headers.get('content-disposition') ?? ''
     const match = /filename="?([^"]+)"?/i.exec(disposition)
     const extension = match ? '' : `.${format}`
+
+    // A 200 with a JSON body means the server answered with report data rather
+    // than a file. Saving that bytes-for-bytes would produce a corrupt export.
+    if ((response.headers.get('content-type') ?? '').includes('application/json')) {
+      throw new ApiError(200, { code: 'EXPORT_FAILED', message: 'The server did not return a report file.' }, 'The export could not be generated.')
+    }
 
     return {
       blob: await response.blob(),

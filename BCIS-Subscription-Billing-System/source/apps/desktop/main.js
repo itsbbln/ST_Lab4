@@ -198,6 +198,8 @@ function buildMenu() {
         { label: 'Print Current View', accelerator: 'CmdOrCtrl+P', click: () => send('print') },
         { label: 'Print Without Navigation', accelerator: 'CmdOrCtrl+Shift+P', click: () => send('print-page') },
         { type: 'separator' },
+        { label: 'Export Current View to PDF', accelerator: 'CmdOrCtrl+E', click: () => send('export') },
+        { type: 'separator' },
         { label: 'Settings', accelerator: 'CmdOrCtrl+,', click: () => send('settings') },
         { type: 'separator' },
         { role: 'quit' }
@@ -432,6 +434,44 @@ function registerIpc() {
     await new Promise((resolve) => mainWindow.webContents.executeJavaScript('window.__bcisBeforePrint && window.__bcisBeforePrint()', true).then(resolve, resolve))
     mainWindow.webContents.print({ silent: false, printBackground: true })
     return true
+  })
+
+  /**
+   * Render the current view to a PDF file and hand it to the native save dialog.
+   *
+   * This is the file counterpart to printing: an operator who needs to keep or
+   * email a route sheet, statement of account or report gets a PDF on disk
+   * instead of only a page on a printer. The renderer marks the printable region
+   * first, exactly as printing does, so the navigation is stripped from the file.
+   */
+  ipcMain.handle('bcis:export-pdf', async (_event, options = {}) => {
+    if (!mainWindow) {
+      return null
+    }
+    const { defaultPath = 'bcis-view.pdf' } = options
+    await new Promise((resolve) =>
+      mainWindow.webContents
+        .executeJavaScript('window.__bcisBeforePrint && window.__bcisBeforePrint()', true)
+        .then(resolve, resolve)
+    )
+    try {
+      const data = await mainWindow.webContents.printToPDF({ printBackground: true, pageSize: 'A4' })
+      const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {
+        defaultPath,
+        filters: [{ name: 'PDF document', extensions: ['pdf'] }]
+      })
+      if (canceled || !filePath) {
+        return null
+      }
+      await fsp.writeFile(filePath, data)
+      return filePath
+    } finally {
+      // printToPDF fires no `afterprint` event, so the renderer's chrome has to
+      // be restored explicitly or the sidebar would stay hidden after export.
+      await mainWindow.webContents
+        .executeJavaScript('window.__bcisAfterPrint && window.__bcisAfterPrint()', true)
+        .catch(() => {})
+    }
   })
 }
 

@@ -11,6 +11,7 @@ import { useState } from 'react'
 
 import { displayMoney } from '../lib/api'
 import { describeError, printCurrent } from '../lib/desktop'
+import { ReportExportMenu, ViewExportMenu } from '../components/export'
 import { formatDate, formatNumber, humanizeToken } from '../lib/format'
 import { useApiQuery, usePagedList } from '../lib/query'
 import {
@@ -121,6 +122,9 @@ export function ServiceAccountsScreen({ initialAccountId }: { initialAccountId?:
       <PageHeader
         title="Service accounts"
         subtitle="Each subscriber service, its plan, and what it still owes"
+        actions={
+          <ReportExportMenu path="/reports/subscribers" query={{ q: search, status, areaId }} suggestedName="bcis-service-accounts" />
+        }
       />
 
       <Panel flush title="Accounts" subtitle={`${formatNumber(list.query?.total ?? 0)} matching`}>
@@ -242,6 +246,7 @@ function ServiceAccountProfile({
             <button type="button" className="btn" onClick={onBack}>
               Back
             </button>
+            <ViewExportMenu suggestedName={`bcis-service-account-${data.serviceAccountNumber}.pdf`} />
             <button type="button" className="btn" onClick={() => void printCurrent('page')}>
               Print
             </button>

@@ -16,6 +16,7 @@ import { useState } from 'react'
 
 import { displayMoney } from '../lib/api'
 import { describeError, printCurrent } from '../lib/desktop'
+import { ViewExportMenu } from '../components/export'
 import { formatDate, formatNumber, humanizeToken } from '../lib/format'
 import { useApiMutation, useApiQuery, usePagedList } from '../lib/query'
 import { useAuth } from '../lib/auth'
@@ -227,6 +228,7 @@ function SuspensionsTab(): React.JSX.Element {
           <button type="button" className="btn" onClick={() => void printCurrent('page')}>
             Print
           </button>
+          <ViewExportMenu suggestedName="bcis-service-control.pdf" />
         </div>
 
         <DataTable

@@ -231,8 +231,35 @@ describe("collection report", () => {
   it("defaults to the current month and monthly granularity", async () => {
     const result = await collectionReport(db, {});
     expect(result.granularity).toBe("monthly");
-    expect(result.buckets.map((bucket) => bucket.period)).toEqual(["2026-09"]);
-    expect(result.totals.collectedCentavos).toBe(BRONZE_MONTHLY + GOLD_MONTHLY);
+
+    // The default window must be [first day of the current month, today], so the
+    // assertion holds no matter which month the suite runs in. The fixtures are
+    // posted on 2026-09-10 and 2026-09-12, which fall inside that window only
+    // while the current month is September 2026.
+    const now = new Date();
+    const firstOfMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+    expect(result.from).toBe(firstOfMonth);
+    expect(result.to).toBe(now.toISOString().slice(0, 10));
+
+    const fixturesInWindow =
+      result.from <= "2026-09-12" && result.to >= "2026-09-10";
+
+    if (fixturesInWindow) {
+      expect(result.buckets.map((bucket) => bucket.period)).toEqual(["2026-09"]);
+      expect(result.totals.postedCount).toBe(2);
+      expect(result.totals.collectedCentavos).toBe(BRONZE_MONTHLY + GOLD_MONTHLY);
+    } else {
+      expect(result.buckets).toEqual([]);
+      expect(result.totals.collectedCentavos).toBe(0);
+    }
+
+    // Whatever the calendar says, every returned bucket must sit inside the
+    // window the report claims to cover.
+    for (const bucket of result.buckets) {
+      const firstDay = bucket.period.length === 7 ? `${bucket.period}-01` : bucket.period;
+      expect(firstDay >= result.from).toBe(true);
+      expect(bucket.period <= result.to).toBe(true);
+    }
   });
 });
 

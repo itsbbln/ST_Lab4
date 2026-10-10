@@ -13,7 +13,7 @@ import type { ReactNode } from 'react'
 import { useAuth } from '../lib/auth'
 import { useConfig } from '../lib/config'
 import { useNavigate, usePath } from '../lib/router'
-import { printCurrent, showMessage } from '../lib/desktop'
+import { exportCurrentView, printCurrent, showMessage } from '../lib/desktop'
 import { humanizeToken } from '../lib/format'
 import type { BcisMenuAction } from '../types/bridge'
 import './shell.css'
@@ -89,18 +89,38 @@ export function AppShell({ children }: { children: ReactNode }): React.JSX.Eleme
     entry.path === '/' ? path === '/' : path === entry.path || path.startsWith(`${entry.path}/`)
 
   /**
+   * The name a view export should suggest in the save dialog, e.g.
+   * `bcis-collector-performance.pdf`. Derived from the active screen so every
+   * export leaves a file that says which screen it came from.
+   */
+  const exportName = useMemo(() => {
+    const active = entries.find((entry) => isActive(entry))
+    const slug = (active?.label ?? 'view')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+    return `bcis-${slug || 'view'}.pdf`
+    // `path` and `entries` cover every input `isActive` reads.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entries, path])
+
+  /**
    * The main process calls this immediately before printing. Collapsing the
    * navigation keeps a route sheet or statement of account on the page by
-   * itself, which the specification requires.
+   * itself, which the specification requires. `__bcisAfterPrint` undoes it for
+   * PDF export, which fires no `afterprint` event of its own.
    */
   useEffect(() => {
+    const restore = () => document.body.classList.remove('printing')
     window.__bcisBeforePrint = () => {
       document.body.classList.add('printing')
     }
-    window.addEventListener('afterprint', () => document.body.classList.remove('printing'))
+    window.__bcisAfterPrint = restore
+    window.addEventListener('afterprint', restore)
     return () => {
-      document.body.classList.remove('printing')
+      restore()
       delete window.__bcisBeforePrint
+      delete window.__bcisAfterPrint
     }
   }, [])
 
@@ -108,6 +128,10 @@ export function AppShell({ children }: { children: ReactNode }): React.JSX.Eleme
     (action: BcisMenuAction) => {
       if (action === 'print' || action === 'print-page') {
         void printCurrent('page')
+        return
+      }
+      if (action === 'export') {
+        void exportCurrentView(exportName)
         return
       }
       if (action === 'settings') {
@@ -119,7 +143,7 @@ export function AppShell({ children }: { children: ReactNode }): React.JSX.Eleme
         navigate(target === 'dashboard' ? '/' : `/${target}`)
       }
     },
-    [navigate]
+    [navigate, exportName]
   )
 
   useEffect(() => {
@@ -201,6 +225,20 @@ export function AppShell({ children }: { children: ReactNode }): React.JSX.Eleme
               title="Print this screen without the navigation"
             >
               Print
+            </button>
+            <button
+              type="button"
+              className="btn btn--sm"
+              onClick={() => {
+                void exportCurrentView(exportName).then((saved) => {
+                  if (saved) {
+                    void showMessage({ type: 'info', message: 'Saved to file', detail: saved })
+                  }
+                })
+              }}
+              title="Export this screen to a PDF file"
+            >
+              Export
             </button>
             {config.launchApiLocally ? (
               <span className="badge badge--info" title={`Listening on port ${config.apiPort}`}>

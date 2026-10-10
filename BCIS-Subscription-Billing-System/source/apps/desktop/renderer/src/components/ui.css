@@ -672,3 +672,53 @@
   font-size: var(--text-xs);
   color: var(--text-subtle);
 }
+
+/* -------------------------------------------------------------- exporting */
+
+.export-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.export-menu__trigger {
+  gap: var(--space-1);
+}
+
+.export-menu__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.export-menu__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 41;
+  min-width: 190px;
+  padding: var(--space-1);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+}
+
+.export-menu__item {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: calc(var(--radius) - 2px);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.export-menu__item:hover {
+  background: var(--surface-sunken);
+}
+

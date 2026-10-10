@@ -7,7 +7,7 @@ This file is the source for the submission artifact `tests/acceptance-test-repor
 - Prepared for the BCIS Subscription Billing and Collection System laboratory submission.
 - The PDF deliverable is generated from this Markdown with `npm run acceptance:pdf` in `source/`.
 - Core verification commands are `npm test`, `npm run test:integration`, and `npm run smoke`.
-- Last updated: 2026-09-28.
+- Last updated: 2026-10-09.
 
 ## Automated Evidence
 
@@ -27,7 +27,7 @@ This file is the source for the submission artifact `tests/acceptance-test-repor
 | AT-06 | Payment reversal | Passed | `source/apps/api/tests/integration.payments.test.ts` |
 | AT-07 | Collector balanced remittance | Passed | `source/apps/api/tests/integration.collections.test.ts` |
 | AT-08 | Collector shortage | Passed | `source/apps/api/tests/integration.collections.test.ts` |
-| AT-09 | Concurrent users on two or three PCs | Pending | Requires live multi-PC or parallel-client execution evidence for the final deployment setup |
+| AT-09 | Concurrent users on two or three PCs | Passed | `source/apps/api/tests/integration.concurrency.test.ts` (parallel billing runs, parallel receipt numbering, parallel GCash approval) and `tests/live-demo-report.md` step 13 |
 | AT-10 | Cashier attempts an admin-only operation | Passed | `source/apps/api/tests/authorization.http.test.ts` and `npm run smoke` |
 | AT-11 | Duplicate billing generation | Passed | `source/apps/api/tests/integration.payments.test.ts` and `source/apps/api/tests/billing.test.ts` |
 | AT-12 | Backup and restore | Passed | `source/apps/api/tests/integration.backup.test.ts` |
@@ -45,5 +45,5 @@ This file is the source for the submission artifact `tests/acceptance-test-repor
 
 ## Remaining Open Items
 
-- AT-09 still needs explicit concurrency validation against the deployed three-PC setup.
+- All twelve mandatory acceptance tests now have automated or live-execution evidence.
 - The final submission package still benefits from additional screenshots and sample exported reports.

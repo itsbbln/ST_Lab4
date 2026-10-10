@@ -15,6 +15,7 @@ import { useState } from 'react'
 
 import { displayMoney } from '../lib/api'
 import { describeError, printCurrent } from '../lib/desktop'
+import { ViewExportMenu } from '../components/export'
 import { formatDate, formatDateTime, formatNumber, humanizeToken } from '../lib/format'
 import { useApiQuery, usePagedList } from '../lib/query'
 import { useNavigate, useQueryParam } from '../lib/router'
@@ -323,6 +324,7 @@ function BatchDetail({
             <button type="button" className="btn" onClick={onBack}>
               Back
             </button>
+            <ViewExportMenu suggestedName={`bcis-collection-${data.batchNumber}.pdf`} />
             <button type="button" className="btn" onClick={() => void printCurrent('page')}>
               Print
             </button>

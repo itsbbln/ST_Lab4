@@ -11,6 +11,7 @@ import { useState } from 'react'
 
 import { displayMoney } from '../lib/api'
 import { describeError, printCurrent } from '../lib/desktop'
+import { ViewExportMenu } from '../components/export'
 import { formatDate, formatNumber } from '../lib/format'
 import { useApiQuery, usePagedList } from '../lib/query'
 import { useNavigate } from '../lib/router'
@@ -124,9 +125,12 @@ export function ReceivablesScreen(): React.JSX.Element {
         title="Receivables"
         subtitle="What is owed, how old it is, and who is collecting it"
         actions={
-          <button type="button" className="btn" onClick={() => void printCurrent('page')}>
-            Print
-          </button>
+          <>
+            <ViewExportMenu suggestedName="bcis-receivables.pdf" />
+            <button type="button" className="btn" onClick={() => void printCurrent('page')}>
+              Print
+            </button>
+          </>
         }
       />
 

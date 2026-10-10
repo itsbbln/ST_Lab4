@@ -10,6 +10,7 @@
 
 import { displayMoney } from '../lib/api'
 import { describeError, printCurrent } from '../lib/desktop'
+import { ViewExportMenu } from '../components/export'
 import { formatDate, formatNumber } from '../lib/format'
 import { useApiQuery, usePagedList } from '../lib/query'
 import { useAuth } from '../lib/auth'
@@ -95,6 +96,7 @@ export function SubscriberProfileScreen({
             <button type="button" className="btn" onClick={onBack}>
               Back to subscribers
             </button>
+            <ViewExportMenu suggestedName={`bcis-subscriber-${data.accountNumber}.pdf`} />
             <button type="button" className="btn" onClick={() => void printCurrent('page')}>
               Print profile
             </button>

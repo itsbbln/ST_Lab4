@@ -66,6 +66,13 @@ function desktopBridge() {
      */
     print: (mode) => ipcRenderer.invoke('bcis:print', mode),
 
+    /**
+     * Render the current view to a PDF file through the native save dialog.
+     * This is the "export" counterpart to printing, available on every screen.
+     * Resolves to the chosen path, or null if the operator cancelled.
+     */
+    exportPdf: (options) => ipcRenderer.invoke('bcis:export-pdf', options),
+
     /** Subscribe to main-process pushes (config changed, API child exited). */
     on: (channel, handler) => {
       const allowed = ['bcis:config-changed', 'bcis:api-status', 'bcis:menu-action']

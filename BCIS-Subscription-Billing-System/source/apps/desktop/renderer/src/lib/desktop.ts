@@ -22,6 +22,22 @@ export async function printCurrent(mode: 'page' | 'window' = 'page'): Promise<vo
   window.print()
 }
 
+/**
+ * Save the current screen to a PDF file through the native save dialog.
+ *
+ * This is the file counterpart to `printCurrent`, available everywhere. It goes
+ * through the main process, which renders the printable region of the live page
+ * to PDF, so a route sheet or statement of account is saved without the sidebar.
+ * Returns the chosen path, or null when the operator cancels or the bridge is
+ * unavailable (for example in a plain browser tab during `vite dev`).
+ */
+export async function exportCurrentView(suggestedName = 'bcis-view.pdf'): Promise<string | null> {
+  if (bridgeAvailable() && typeof window.bcis.exportPdf === 'function') {
+    return window.bcis.exportPdf({ defaultPath: suggestedName })
+  }
+  return null
+}
+
 export async function confirmAction(options: {
   message: string
   detail?: string
@@ -148,6 +164,30 @@ export function useReportExport(): {
         await showMessage({
           type: 'info',
           message: 'Report saved',
+          detail: saved
+        })
+      }
+    }
+  }
+}
+
+/**
+ * Save the current screen to a PDF file, reporting where it landed.
+ *
+ * Screens call this from an Export control so behaviour is identical on every
+ * part of the application; the shell also wires the top-bar button and the File
+ * menu to the same helper.
+ */
+export function useViewExport(): {
+  exportView: (suggestedName?: string) => Promise<void>
+} {
+  return {
+    exportView: async (suggestedName = 'bcis-view.pdf') => {
+      const saved = await exportCurrentView(suggestedName)
+      if (saved) {
+        await showMessage({
+          type: 'info',
+          message: 'Saved to file',
           detail: saved
         })
       }

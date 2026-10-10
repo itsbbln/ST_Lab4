@@ -31,6 +31,7 @@ import {
   useToasts
 } from '../components/ui'
 import type { Column } from '../components/ui'
+import { ReportExportMenu } from '../components/export'
 import type { ItemsResponse, SubscriberListRow } from '../types/api'
 import type { CollectionAreaRow } from '../types/api'
 
@@ -123,11 +124,14 @@ function SubscriberList(): React.JSX.Element {
         title="Subscribers"
         subtitle="Search by name, account number, address, receipt number or invoice number"
         actions={
-          can('subscriber.manage') ? (
-            <button type="button" className="btn btn--primary" onClick={() => setShowForm(true)}>
-              New subscriber
-            </button>
-          ) : null
+          <>
+            <ReportExportMenu path="/reports/subscribers" query={{ q: search, status, areaId }} suggestedName="bcis-subscribers" />
+            {can('subscriber.manage') ? (
+              <button type="button" className="btn btn--primary" onClick={() => setShowForm(true)}>
+                New subscriber
+              </button>
+            ) : null}
+          </>
         }
       />
 

@@ -537,3 +537,84 @@ export function Pagination({
     </div>
   )
 }
+
+/* -------------------------------------------------------------- exporting */
+
+export type ExportFormat = 'pdf' | 'csv' | 'xlsx'
+
+const EXPORT_LABELS: Record<ExportFormat, string> = {
+  pdf: 'PDF document (.pdf)',
+  csv: 'CSV spreadsheet (.csv)',
+  xlsx: 'Excel workbook (.xlsx)'
+}
+
+/**
+ * A small drop-down that turns a screen into a saved file.
+ *
+ * Every part of the application offers an export, so the menu lives here rather
+ * than being rebuilt per page. `onExport` receives the chosen format; pages back
+ * it either with a report endpoint (CSV/XLSX/PDF) or the shared view-to-PDF
+ * helper when the screen has no report equivalent.
+ */
+export function ExportMenu({
+  onExport,
+  formats = ['pdf'],
+  label = 'Export',
+  title = 'Export this view to a file',
+  disabled = false
+}: {
+  onExport: (format: ExportFormat) => void | Promise<void>
+  formats?: ExportFormat[]
+  label?: string
+  title?: string
+  disabled?: boolean
+}): React.JSX.Element {
+  const [open, setOpen] = useState(false)
+  const [busy, setBusy] = useState<ExportFormat | null>(null)
+
+  const run = async (format: ExportFormat): Promise<void> => {
+    setOpen(false)
+    setBusy(format)
+    try {
+      await onExport(format)
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  return (
+    <div className="export-menu">
+      <button
+        type="button"
+        className="btn btn--sm export-menu__trigger"
+        onClick={() => setOpen((current) => !current)}
+        disabled={disabled || busy !== null}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        title={title}
+      >
+        {busy ? 'Exporting…' : label}
+        <span aria-hidden="true">▾</span>
+      </button>
+
+      {open ? (
+        <>
+          <div className="export-menu__backdrop" aria-hidden="true" onClick={() => setOpen(false)} />
+          <div className="export-menu__list" role="menu">
+            {formats.map((format) => (
+              <button
+                key={format}
+                type="button"
+                role="menuitem"
+                className="export-menu__item"
+                onClick={() => void run(format)}
+              >
+                {EXPORT_LABELS[format]}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : null}
+    </div>
+  )
+}

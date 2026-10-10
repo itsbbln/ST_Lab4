@@ -7,6 +7,7 @@ import {
   Pagination
 } from '../components/ui'
 import type { Column } from '../components/ui'
+import { ReportExportMenu } from '../components/export'
 import { formatDateTime, humanizeToken } from '../lib/format'
 import { usePagedList } from '../lib/query'
 
@@ -73,7 +74,11 @@ export function AuditScreen(): React.JSX.Element {
 
   return (
     <>
-      <PageHeader title="Audit trail" subtitle="Append-only record of operator and system activity" />
+      <PageHeader
+        title="Audit trail"
+        subtitle="Append-only record of operator and system activity"
+        actions={<ReportExportMenu path="/reports/audit" suggestedName="bcis-audit-trail" />}
+      />
       <Panel flush title="Recent activity">
         <DataTable
           columns={columns}

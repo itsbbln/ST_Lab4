@@ -16,6 +16,7 @@ import { useState } from 'react'
 
 import { displayMoney } from '../lib/api'
 import { describeError, printCurrent } from '../lib/desktop'
+import { ReportExportMenu, ViewExportMenu } from '../components/export'
 import { formatDate, formatNumber } from '../lib/format'
 import { useApiQuery } from '../lib/query'
 import { useNavigate } from '../lib/router'
@@ -170,9 +171,13 @@ export function PerformanceScreen(): React.JSX.Element {
         title="Collector performance"
         subtitle="What each collector was expected to take, and what actually came back"
         actions={
-          <button type="button" className="btn" onClick={() => void printCurrent('page')}>
-            Print
-          </button>
+          <>
+            <ReportExportMenu path="/reports/collector-performance" suggestedName="bcis-collector-performance" />
+            <ViewExportMenu suggestedName="bcis-collector-performance.pdf" />
+            <button type="button" className="btn" onClick={() => void printCurrent('page')}>
+              Print
+            </button>
+          </>
         }
       />
 

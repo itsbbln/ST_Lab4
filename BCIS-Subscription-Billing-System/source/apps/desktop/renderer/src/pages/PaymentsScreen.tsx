@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react'
 
 import { displayMoney, pesosToCentavos } from '../lib/api'
 import { confirmAction, describeError } from '../lib/desktop'
+import { ReportExportMenu } from '../components/export'
 import { formatDateTime, formatNumber, humanizeToken } from '../lib/format'
 import { useApiMutation, useApiQuery, usePagedList } from '../lib/query'
 import { useAuth } from '../lib/auth'
@@ -127,11 +128,14 @@ export function PaymentsScreen({ initialShowReceive = false }: { initialShowRece
         title="Payments"
         subtitle="Every receipt posted, and the account it was applied to"
         actions={
-          can('payment.create') ? (
-            <button type="button" className="btn btn--primary" onClick={() => setShowReceive(true)}>
-              Receive payment
-            </button>
-          ) : null
+          <>
+            <ReportExportMenu path="/reports/payments" query={{ q: search, method }} suggestedName="bcis-payments-register" />
+            {can('payment.create') ? (
+              <button type="button" className="btn btn--primary" onClick={() => setShowReceive(true)}>
+                Receive payment
+              </button>
+            ) : null}
+          </>
         }
       />
 

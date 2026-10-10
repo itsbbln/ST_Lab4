@@ -59,6 +59,11 @@ export interface PickFileOptions {
   multiple?: boolean
 }
 
+/** Suggested filename for a view export; the operator confirms it in the save dialog. */
+export interface ExportPdfOptions {
+  defaultPath?: string
+}
+
 /** `page` strips the sidebar and top bar; `window` prints whatever is on screen. */
 export type PrintMode = 'page' | 'window'
 
@@ -71,6 +76,7 @@ export interface ApiStatus {
 export type BcisMenuAction =
   | 'print'
   | 'print-page'
+  | 'export'
   | 'settings'
   | `navigate:${string}`
 
@@ -88,6 +94,7 @@ export interface BcisBridge {
   confirm(options: ConfirmOptions): Promise<boolean>
   message(options: MessageOptions): Promise<boolean>
   print(mode: PrintMode): Promise<boolean>
+  exportPdf(options?: ExportPdfOptions): Promise<string | null>
   on(channel: 'bcis:config-changed', handler: (config: BcisConfig) => void): () => void
   on(channel: 'bcis:api-status', handler: (status: ApiStatus) => void): () => void
   on(channel: 'bcis:menu-action', handler: (action: BcisMenuAction) => void): () => void
@@ -102,6 +109,11 @@ declare global {
      * calls it through `executeJavaScript`.
      */
     __bcisBeforePrint?: () => void
+    /**
+     * Restores the application chrome after a print or PDF export. Declared here
+     * because the main process calls it through `executeJavaScript`.
+     */
+    __bcisAfterPrint?: () => void
   }
 }
 

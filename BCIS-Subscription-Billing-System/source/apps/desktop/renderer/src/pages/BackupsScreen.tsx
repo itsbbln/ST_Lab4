@@ -5,7 +5,6 @@ import type { Column } from '../components/ui'
 import { confirmAction } from '../lib/desktop'
 import { formatDateTime, formatNumber, humanizeToken } from '../lib/format'
 import { useApiMutation, useApiQuery } from '../lib/query'
-import type { IntegrityCheck } from '../types/api'
 
 interface BackupRecord {
   id: string
@@ -42,6 +41,15 @@ interface VerifyBackupResponse {
   backup: BackupRecord
   ok: boolean
   notes: string[]
+}
+
+interface IntegrityCheck {
+  name: string
+  description: string
+  passed: boolean
+  severity: 'ERROR' | 'WARNING'
+  violations: number
+  samples: string[]
 }
 
 interface IntegrityReport {
