@@ -649,6 +649,52 @@ export interface PaymentListResponse {
   totalPostedCentavos: number
 }
 
+export interface PaymentInvoiceAllocation {
+  id: string
+  invoiceId: string
+  invoiceNumber: string
+  period: string
+  invoiceStatus: string
+  invoiceTotalCentavos: number
+  invoicePaidCentavos: number
+  invoiceBalanceCentavos: number
+  amountCentavos: number
+  allocationType: string
+  amount: string
+  invoiceTotal: string
+  invoicePaid: string
+  invoiceBalance: string
+}
+
+export interface PaymentDetail {
+  id: string
+  receiptNumber: string
+  paymentDate: string
+  amountCentavos: number
+  allocatedCentavos: number
+  advanceCentavos: number
+  creditAppliedCentavos: number
+  method: string
+  referenceNumber: string | null
+  notes: string | null
+  status: string
+  postedByName: string
+  reversalReason: string | null
+  serviceAccountId: string
+  serviceAccountNumber: string
+  subscriberName: string
+  accountNumber: string
+  totals: {
+    amount: string
+    allocated: string
+    advance: string
+    creditApplied: string
+  }
+  allocations: PaymentInvoiceAllocation[]
+  receipt: unknown | null
+  reversal: unknown | null
+}
+
 export interface AllocationLine {
   invoiceId: string
   invoiceNumber: string

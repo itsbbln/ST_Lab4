@@ -6,7 +6,7 @@ import { closeDatabase, getDatabase, inTransaction, queryRows } from "../src/db/
 import { collectionAreas, invoices, ledgerEntries, serviceAccounts, servicePlans, serviceTypes, subscribers } from "../src/db/schema/index.js";
 import { generateMonthlyBilling } from "../src/services/billing.js";
 import { accountBalance, listLedger } from "../src/services/ledger.js";
-import { postPayment, previewAllocation, reversePayment, submitGcashProof, verifyGcashProof } from "../src/services/payments.js";
+import { getPayment, postPayment, previewAllocation, reversePayment, submitGcashProof, verifyGcashProof } from "../src/services/payments.js";
 
 /**
  * End-to-end money tests against a real PostgreSQL database.
@@ -283,6 +283,41 @@ describe("billing then payment, end to end", () => {
     await expect(
       inTransaction((tx) => reversePayment(tx, payment.paymentId, "Second reversal", undefined))
     ).rejects.toThrow(/already been reversed/i);
+  });
+
+  it("returns receipt allocation details with the current invoice paid status", async () => {
+    const [freshAccount] = await db
+      .insert(serviceAccounts)
+      .values({
+        serviceAccountNumber: `SA-${randomUUID().slice(0, 8).toUpperCase()}`,
+        subscriberId,
+        planId,
+        installationAddress: "2 Test Street",
+        activationDate: "2026-01-01",
+        billingStartPeriod: "2026-01",
+        billingDueDay: 5,
+        currentRateCentavos: MONTHLY,
+        status: "ACTIVE"
+      })
+      .returning();
+    await inTransaction((tx) => generateMonthlyBilling({ period: "2026-11", applyPenalty: false }));
+    const payment = await inTransaction((tx) =>
+      postPayment(tx, { serviceAccountId: freshAccount.id, amountCentavos: 50_000, method: "CASH" })
+    );
+
+    const detail = await getPayment(db, payment.paymentId);
+
+    expect(detail.receiptNumber).toBe(payment.receiptNumber);
+    expect(detail.allocations).toHaveLength(1);
+    expect(detail.allocations[0]).toMatchObject({
+      invoiceStatus: "PARTIALLY_PAID",
+      invoiceTotalCentavos: MONTHLY,
+      invoicePaidCentavos: 50_000,
+      invoiceBalanceCentavos: MONTHLY - 50_000
+    });
+    expect(detail.allocations[0].invoiceTotal).toContain("1,500.00");
+    expect(detail.allocations[0].invoicePaid).toContain("500.00");
+    expect(detail.allocations[0].invoiceBalance).toContain("1,000.00");
   });
 });
 

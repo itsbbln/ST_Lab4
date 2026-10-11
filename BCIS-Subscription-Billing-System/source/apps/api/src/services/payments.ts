@@ -1147,6 +1147,10 @@ export async function getPayment(executor: Executor, paymentId: string) {
       invoiceId: invoices.id,
       invoiceNumber: invoices.invoiceNumber,
       period: invoices.period,
+    invoiceStatus: invoices.status,
+    invoiceTotalCentavos: invoices.totalCentavos,
+    invoicePaidCentavos: invoices.paidCentavos,
+    invoiceBalanceCentavos: invoices.balanceCentavos,
       amountCentavos: paymentAllocations.amountCentavos,
       allocationType: paymentAllocations.allocationType
     })
@@ -1169,7 +1173,13 @@ export async function getPayment(executor: Executor, paymentId: string) {
 
   return {
     ...payment,
-    allocations: allocationRows.map((row) => ({ ...row, amount: formatCentavos(row.amountCentavos) })),
+    allocations: allocationRows.map((row) => ({
+      ...row,
+      amount: formatCentavos(row.amountCentavos),
+      invoiceTotal: formatCentavos(row.invoiceTotalCentavos),
+      invoicePaid: formatCentavos(row.invoicePaidCentavos),
+      invoiceBalance: formatCentavos(row.invoiceBalanceCentavos)
+    })),
     receipt: receipt[0] ?? null,
     reversal: reversal[0] ?? null,
     totals: {

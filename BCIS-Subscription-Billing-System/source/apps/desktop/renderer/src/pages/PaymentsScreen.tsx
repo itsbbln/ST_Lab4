@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 
 import { displayMoney, pesosToCentavos } from '../lib/api'
 import { confirmAction, describeError } from '../lib/desktop'
-import { ReportExportMenu } from '../components/export'
+import { ReportExportMenu, ViewExportMenu } from '../components/export'
 import { formatDateTime, formatNumber, humanizeToken } from '../lib/format'
 import { useApiMutation, useApiQuery, usePagedList } from '../lib/query'
 import { useAuth } from '../lib/auth'
@@ -28,6 +28,7 @@ import {
   EmptyState,
   Field,
   LoadError,
+  Loading,
   Modal,
   MoneyInput,
   PageHeader,
@@ -38,7 +39,7 @@ import {
   useToasts
 } from '../components/ui'
 import type { Column } from '../components/ui'
-import type { AllocationPreview, PaymentListResponse, PaymentListRow, ServiceAccountListRow } from '../types/api'
+import type { AllocationPreview, PaymentDetail, PaymentListResponse, PaymentListRow, ServiceAccountListRow } from '../types/api'
 
 const METHODS = ['CASH', 'GCASH', 'BANK_TRANSFER', 'CHEQUE', 'OTHER'] as const
 const STATUS_OPTIONS = ['POSTED', 'REVERSED'] as const
@@ -52,6 +53,7 @@ export function PaymentsScreen({ initialShowReceive = false }: { initialShowRece
   const [status, setStatus] = useState('')
   const [showReceive, setShowReceive] = useState(initialShowReceive)
   const [reversing, setReversing] = useState<PaymentListRow | null>(null)
+  const [selectedPaymentId, setSelectedPaymentId] = useState<string | null>(null)
 
   useEffect(() => {
     setShowReceive(initialShowReceive)
@@ -61,6 +63,10 @@ export function PaymentsScreen({ initialShowReceive = false }: { initialShowRece
 
   if (list.error?.isUnreachable) {
     return <LoadError message={describeError(list.error)} onRetry={list.refetch} />
+  }
+
+  if (selectedPaymentId) {
+    return <PaymentDetails paymentId={selectedPaymentId} onBack={() => setSelectedPaymentId(null)} />
   }
 
   const columns: Array<Column<PaymentListRow>> = [
@@ -222,6 +228,7 @@ export function PaymentsScreen({ initialShowReceive = false }: { initialShowRece
             rows={list.query?.items ?? []}
             rowKey={(row) => row.id}
             loading={list.isPending}
+            onRowClick={(row) => setSelectedPaymentId(row.id)}
             empty={<EmptyState title="No payments match these filters" />}
           />
 
@@ -262,6 +269,73 @@ export function PaymentsScreen({ initialShowReceive = false }: { initialShowRece
       ) : null}
 
       <ToastStack toasts={toasts} onDismiss={dismiss} />
+    </>
+  )
+}
+
+function PaymentDetails({ paymentId, onBack }: { paymentId: string; onBack: () => void }): React.JSX.Element {
+  const payment = useApiQuery<PaymentDetail>(['payments', paymentId], (client) =>
+    client.get<PaymentDetail>(`/payments/${paymentId}`)
+  )
+
+  if (payment.isPending) {
+    return <Loading label="Loading receipt details" />
+  }
+  if (payment.error || !payment.data) {
+    return <LoadError message={describeError(payment.error)} onRetry={() => void payment.refetch()} />
+  }
+
+  const data = payment.data
+  const allocationColumns: Array<Column<PaymentDetail['allocations'][number]>> = [
+    { key: 'invoice', header: 'Invoice', render: (row) => <span className="mono">{row.invoiceNumber}</span> },
+    { key: 'period', header: 'Period', render: (row) => <span className="mono">{row.period}</span> },
+    { key: 'applied', header: 'Applied', money: true, render: (row) => <span className="money">{row.amount}</span> },
+    { key: 'invoiceStatus', header: 'Invoice status', render: (row) => <Badge status={row.invoiceStatus} /> },
+    { key: 'invoicePaid', header: 'Invoice paid', money: true, render: (row) => <span className="money">{row.invoicePaid}</span> },
+    { key: 'invoiceBalance', header: 'Remaining balance', money: true, render: (row) => <span className="money">{row.invoiceBalance}</span> }
+  ]
+
+  return (
+    <>
+      <PageHeader
+        title={data.receiptNumber}
+        subtitle={`${data.subscriberName} · ${data.serviceAccountNumber}`}
+        actions={
+          <>
+            <button type="button" className="btn" onClick={onBack}>Back to payments</button>
+            <ViewExportMenu suggestedName={`bcis-receipt-${data.receiptNumber}.pdf`} />
+          </>
+        }
+      />
+      <div className="stack">
+        <div className="stat-grid">
+          <StatTile label="Amount received" value={data.totals.amount} tone="info" />
+          <StatTile label="Applied to invoices" value={data.totals.allocated} />
+          <StatTile label="Advance credit" value={data.totals.advance} tone={data.advanceCentavos > 0 ? 'warning' : 'success'} />
+        </div>
+
+        <Panel title="Receipt details">
+          <dl className="kv">
+            <div className="kv__row"><dt className="kv__key">Payment status</dt><dd className="kv__value"><Badge status={data.status} /></dd></div>
+            <div className="kv__row"><dt className="kv__key">Subscriber</dt><dd className="kv__value">{data.subscriberName} <span className="text-muted mono">({data.accountNumber})</span></dd></div>
+            <div className="kv__row"><dt className="kv__key">Service account</dt><dd className="kv__value mono">{data.serviceAccountNumber}</dd></div>
+            <div className="kv__row"><dt className="kv__key">Received</dt><dd className="kv__value">{formatDateTime(data.paymentDate)}</dd></div>
+            <div className="kv__row"><dt className="kv__key">Method</dt><dd className="kv__value"><Badge label={humanizeToken(data.method)} status={data.method} /></dd></div>
+            <div className="kv__row"><dt className="kv__key">Reference</dt><dd className="kv__value mono">{data.referenceNumber ?? '—'}</dd></div>
+            <div className="kv__row"><dt className="kv__key">Posted by</dt><dd className="kv__value">{data.postedByName}</dd></div>
+            {data.notes ? <div className="kv__row"><dt className="kv__key">Notes</dt><dd className="kv__value">{data.notes}</dd></div> : null}
+            {data.reversalReason ? <div className="kv__row"><dt className="kv__key">Reversal reason</dt><dd className="kv__value">{data.reversalReason}</dd></div> : null}
+          </dl>
+        </Panel>
+
+        <Panel flush title="Invoices covered by this receipt">
+          {data.allocations.length > 0 ? (
+            <DataTable columns={allocationColumns} rows={data.allocations} rowKey={(row) => row.id} />
+          ) : (
+            <EmptyState title="No invoice allocation" hint="This receipt is held as an advance or account credit." />
+          )}
+        </Panel>
+      </div>
     </>
   )
 }
